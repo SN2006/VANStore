@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order</title>
+    <link rel="stylesheet" href="" th:href="@{/css/order.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/nav.css}">
+</head>
+<body>
+
+<div class="header">
+    <a href="/" class="logo">VANSTORE</a>
+    <div class="nav">
+        <a href="/">Главная страница</a>
+        <a href="/catalog/selectCategory">Каталог</a>
+        <a href="/contact_us">Написать нам</a>
+        <a href="/userProfile">Мой профиль</a>
+        <a href="/cart">Корзина</a>
+    </div>
+</div>
+
+<div class="order-container">
+
+    <div class="order-header">
+        <h1 th:text="${'Заказ №' + order.getId()}"></h1>
+    </div>
+
+    <div class="order-details">
+        <div class="seller-info">
+            <h2>Данные продавца</h2>
+            <p><strong>Полное имя:</strong> <i th:text="${order.getSeller().toString()}"></i></p>
+            <p><strong>Email:</strong> <i th:text="${order.getSeller().getEmail()}"></i></p>
+        </div>
+
+        <div class="seller-info">
+            <h2>Данные покупателя</h2>
+            <p><strong>Полное имя:</strong> <i th:text="${order.getBuyer().toString()}"></i></p>
+            <p><strong>Email:</strong> <i th:text="${order.getBuyer().getEmail()}"></i></p>
+        </div>
+
+        <div class="order-summary">
+            <h2>Order Summary</h2>
+            <p><strong>Total Cost:</strong> <span th:text="${order.getTotalCount()} + ' ₴'"></span></p>
+            <p><strong>Status:</strong> <span th:text="${order.getStatus()}"></span></p>
+        </div>
+
+        <div class="order-products">
+            <div class="order-product" th:each="product: ${products}">
+                <img th:src="@{/images/{id}(id=${product.getProduct().getPreviewImageId()})}" alt="Product 1">
+                <p><a th:href="@{/products/{id}(id=${product.getProduct().getId()})}" th:text="${product.getProduct().getName()}">Product 1</a></p>
+                <p><strong>Цена:</strong> <span th:text="${product.getProduct().getPrice()} + ' ₴'"></span></p>
+                <p><strong>Количество:</strong> <span th:text="${product.getCount()}"></span></p>
+            </div>
+
+            <!-- Add more order products as needed -->
+
+        </div>
+    </div>
+
+    <div class="order-status-form" th:if="${isSeller}">
+        <h2>Обновление статуса заказа</h2>
+        <form th:method="PATCH" th:action="@{/orders/setStatus/{id}(id=${order.getId()})}">
+            <label for="order-status">Select Status:</label>
+            <select id="order-status" name="status">
+                <option value="Заказ обрабатывается" th:if="${order.getStatus().equals('Заказ обрабатывается')}" selected>Заказ обрабатывается</option>
+                <option value="Заказ обрабатывается" th:unless="${order.getStatus().equals('Заказ обрабатывается')}">Заказ обрабатывается</option>
+                <option value="Заказ доставляется" th:if="${order.getStatus().equals('Заказ доставляется')}" selected>Заказ доставляется</option>
+                <option value="Заказ доставляется" th:unless="${order.getStatus().equals('Заказ доставляется')}">Заказ доставляется</option>
+                <option value="Заказ выполнен" th:if="${order.getStatus().equals('Заказ выполнен')}" selected>Заказ выполнен</option>
+                <option value="Заказ выполнен" th:unless="${order.getStatus().equals('Заказ выполнен')}">Заказ выполнен</option>
+                <option value="Заказ отменен" th:if="${order.getStatus().equals('Заказ отменен')}" selected>Заказ отменен</option>
+                <option value="Заказ отменен" th:unless="${order.getStatus().equals('Заказ отменен')}">Заказ отменен</option>
+            </select>
+            <br>
+            <input type="submit" value="Обновить статус">
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

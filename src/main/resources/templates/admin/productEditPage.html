@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit product</title>
+    <link rel="stylesheet" href="" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/productEdit.css}">
+</head>
+<body>
+<div class="header">
+    <a href="/" class="logo">VANSTORE</a>
+    <div class="nav">
+        <a href="/">Главная страница</a>
+        <a href="/catalog/selectCategory">Каталог</a>
+        <a href="/contact_us">Написать нам</a>
+        <a href="/userProfile">Мой профиль</a>
+    </div>
+</div>
+
+<div class="edit-product-container">
+    <h2>Редактирование товара</h2>
+
+    <form class="edit-product-info-form" th:method="PATCH" th:action="@{/products/{productId}(productId=${product.getId()})}" th:object="${product}">
+        <label for="productName">Название товара:</label>
+        <input th:field="*{name}" type="text" id="productName" name="productName" required>
+        <p style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
+        <label for="modelSelect">Категория товара:</label>
+        <select name="modelId" id="modelSelect">
+            <th:block th:each="model : ${models}">
+                <option th:if="${model.getId() == product.getCarModel().getId()}" th:value="${model.getId()}"
+                        th:text="${model.getCarBrand().getName() + ': ' + model.getName()}" selected="selected"></option>
+                <option th:unless="${model.getId() == product.getCarModel().getId()}" th:value="${model.getId()}"
+                        th:text="${model.getCarBrand().getName() + ': ' + model.getName()}"></option>
+            </th:block>
+        </select>
+
+        <label for="productDescription">Описание товара:</label>
+        <textarea th:field="*{description}" id="productDescription" name="productDescription" rows="4" required></textarea>
+
+        <label for="productPrice">Стоимость продукта (грн):</label>
+        <input th:field="*{price}" type="number" id="productPrice" name="productPrice" step="0.01" required>
+        <p style="color: red" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+
+        <input type="submit" value="Сохранить изменение">
+    </form>
+
+    <div class="edit-product-images">
+        <div class="edit-product-image" th:each="image : ${images}">
+            <img th:src="@{/images/{imageId}(imageId=${image.getId()})}" alt="Product Image">
+            <div class="edit-product-image-forms">
+                <form th:method="DELETE" th:action="@{/products/{productId}/deletePicture(productId=${product.getId()})}">
+                    <input type="hidden" th:value="${image.getId()}" name="imageId">
+                    <input type="submit" value="Delete">
+                </form>
+                <form th:unless="${image.isPreviewImage()}" th:method="PATCH" th:action="@{/products/{productId}/setMainPicture(productId=${product.getId()})}">
+                    <input type="hidden" th:value="${image.getId()}" name="imageId">
+                    <input type="submit" value="Set as Main">
+                </form>
+            </div>
+        </div>
+
+        <!-- Add more images with forms as needed -->
+    </div>
+
+    <div class="add-image-form">
+        <form th:method="PATCH" th:action="@{/products/{productId}/addPicture(productId=${product.getId()})}" enctype="multipart/form-data">
+            <input type="file" id="newImage" name="file" accept="image/*">
+            <label for="newImage">Выберите фотографию товара</label>
+            <input type="submit" id="submit">
+            <label for="submit">Добавить фотографию товара</label>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

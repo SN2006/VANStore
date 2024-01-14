@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select subcategory</title>
+    <link rel="stylesheet" href="" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/selectCategory.css}">
+</head>
+<body>
+
+<div class="header">
+    <a href="/" class="logo">VANSTORE</a>
+    <div class="nav">
+        <a href="/">Главная страница</a>
+        <a href="/catalog/selectCategory">Каталог</a>
+        <a href="/contact_us">Написать нам</a>
+        <a href="/userProfile">Мой профиль</a>
+        <a href="/cart">Корзина</a>
+    </div>
+</div>
+
+<div class="header2">
+    <h1>Выбор подкатегории</h1>
+</div>
+
+<div class="categories-container">
+    <h3 th:if="${categories.isEmpty()}" style="color: #333">Товары для этой марки машины отсудствуют</h3>
+    <div class="category" th:each="category : ${categories}">
+        <a th:href="@{${'/catalog?modelId=' + category.getId()}}" th:text="${category.getName()}">Category 1</a>
+    </div>
+
+    <!-- Add more categories as needed -->
+</div>
+
+</body>
+</html>

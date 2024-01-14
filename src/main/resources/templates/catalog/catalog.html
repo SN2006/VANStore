@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalog</title>
+    <link rel="stylesheet" href="" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/catalog.css}">
+</head>
+<body>
+
+<div class="header">
+    <a href="/" class="logo">VANSTORE</a>
+    <div class="nav">
+        <a href="/">Главная страница</a>
+        <a href="/catalog/selectCategory">Каталог</a>
+        <a href="/contact_us">Написать нам</a>
+        <a href="/userProfile">Мой профиль</a>
+        <a href="/cart">Корзина</a>
+    </div>
+</div>
+
+<div class="search-bar">
+    <form th:method="GET" th:action="@{${'/catalog'}}">
+        <input type="hidden" th:value="${modelId}" name="modelId">
+        <input type="text" placeholder="Поиск товаров" name="search" >
+        <button type="submit">Поиск</button>
+    </form>
+</div>
+
+<div class="products-container">
+    <h3 th:if="${products.isEmpty()}">Товары на этой странице отсутствуют</h3>
+    <!-- Пример товара -->
+    <div class="product" th:each="product : ${products}">
+        <img th:src="@{/images/{imgId}(imgId = ${product.getPreviewImageId()})}" alt="Product Image">
+        <a th:href="@{/products/{id}(id=${product.getId()})}" th:text="${product.getName()}">Product Name</a>
+        <p th:text="${'Ценв: ' + product.getPrice() + ' ₴'}">$19.99</p>
+    </div>
+</div>
+
+<div class="pagination">
+    <a th:href="@{${'/catalog?modelId=' + modelId + '&page=' + page}}" th:if="${page==0}" class="prev">&lt; Предыдущая</a>
+    <a th:href="@{${'/catalog?modelId=' + modelId + '&page=' + (page - 1)}}" th:if="${page!=0}" class="prev">&lt; Предыдущая</a>
+    <a th:href="@{${'/catalog?modelId=' + modelId + '&page=' + (page + 1)}}" th:if="${!products.isEmpty()}" class="next">Следующая &gt;</a>
+    <a th:href="@{${'/catalog?modelId=' + modelId + '&page=' + page}}" th:if="${products.isEmpty()}" class="next">Следующая &gt;</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+.edit-product-container {
+    color: #333;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    margin-top: 80px;
+    text-align: left;
+}
+
+.edit-product-info-form label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.edit-product-info-form input,
+.edit-product-info-form select,
+.edit-product-info-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.edit-product-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.edit-product-image {
+    position: relative;
+}
+
+.edit-product-image img {
+    max-width: 100%;
+    border-radius: 4px;
+}
+
+.edit-product-image-forms {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-product-image-forms form {
+    margin-bottom: 5px;
+}
+
+.edit-product-image-forms input[type="submit"] {
+    background-color: #3498db;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.edit-product-image-forms input[type="submit"]:hover {
+    background-color: #2c3e50;
+}
+
+.add-image-form {
+    margin-top: 10px;
+}
+
+.add-image-form input[type="file"] {
+    display: none;
+}
+
+.add-image-form input[type="submit"] {
+    display: none;
+}
+
+.add-image-form label {
+    margin-top: 5px;
+    background-color: #3498db;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    display: inline-block;
+}
+
+.edit-product-info-form input[type="submit"] {
+    background-color: #3498db;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.edit-product-info-form input[type="submit"]:hover {
+    background-color: #2c3e50;
+}

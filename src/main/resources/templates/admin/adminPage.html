@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin panel</title>
+  <link rel="stylesheet" href="" th:href="@{/css/adminPage.css}">
+</head>
+<body>
+
+<div class="header">
+  <a href="/" class="logo">VANSTORE</a>
+  <div class="nav">
+    <a href="/">Главная страница</a>
+    <a href="/catalog/selectCategory">Каталог</a>
+    <a href="/contact_us">Написать нам</a>
+    <a href="/userProfile">Мой профиль</a>
+    <a href="/cart">Корзина</a>
+  </div>
+</div>
+
+<div>
+  <div class="form-container">
+    <h2>Добавление нового товара</h2>
+    <form th:method="POST" th:action="@{/products}" th:object="${newProduct}" enctype="multipart/form-data">
+      <input type="hidden" th:value="${person.getId()}" name="personId">
+      <label for="productName">Название товара:</label>
+      <input th:field="*{name}" type="text" id="productName" required>
+      <p style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
+      <label for="modelSelect">Категория товара: </label>
+      <select id="modelSelect" name="modelId">
+        <option th:each="model : ${models}" th:value="${model.getId()}"
+                th:text="${model.getCarBrand().getName() + ': ' + model.getName()}"></option>
+      </select>
+
+      <label for="productDescription">Описание товара:</label>
+      <textarea th:field="*{description}" id="productDescription" rows="4" required></textarea>
+
+      <label for="productPrice">Стоимость продукта (грн):</label>
+      <input th:field="*{price}" type="number" id="productPrice" step="1" required>
+      <p style="color: red" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+
+      <label for="productImage" class="file-input">
+        <input type="file" id="productImage" name="file" accept="image/*" required>
+        <label>Выберите фотографию товара</label>
+      </label>
+
+      <input type="submit" value="Добавить товар">
+    </form>
+  </div>
+
+  <div class="product-container">
+    <h2 th:if="${products.isEmpty()}">Вы ещё не выкладывали свои товары</h2>
+    <div class="product" th:each="product : ${products}">
+      <img th:src="@{/images/{imgId}(imgId = ${product.getPreviewImageId()})}" alt="Product Image">
+      <div class="product-info">
+        <h3>
+          <a th:href="@{/products/{productId}(productId=${product.getId()})}" th:text="${product.getName()}"></a>
+        </h3>
+        <p>Категория товара: </p>
+        <p th:text="${product.getCarModel().getCarBrand().getName() + ': ' + product.getCarModel().getName()}"></p>
+        <p th:text="${'Цена: ' + product.getPrice() + ' ₴'}">Price: $19.99</p>
+      </div>
+      <div class="product-forms">
+        <form th:action="@{/admin/editProduct/{productId}(productId=${product.getId()})}" th:method="GET">
+          <input type="submit" value="Редактировать товар">
+        </form>
+        <form th:action="@{/products/{productId}(productId=${product.getId()})}" th:method="DELETE">
+          <input type="submit" value="Удалить товар">
+        </form>
+      </div>
+    </div>
+    <!-- Add more product entries as needed -->
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/product.css}">
+</head>
+<body>
+
+<div class="header">
+    <a href="/" class="logo">VANSTORE</a>
+    <div class="nav">
+        <a href="/">Главная страница</a>
+        <a href="/catalog/selectCategory">Каталог</a>
+        <a href="/contact_us">Написать нам</a>
+        <a href="/userProfile">Мой профиль</a>
+        <a href="/cart">Корзина</a>
+    </div>
+</div>
+
+<div class="product-container">
+    <div class="product-slider swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" th:each="image : ${images}"><img th:src="@{/images/{imageId}(imageId=${image.getId()})}" alt="Product Image"></div>
+<!--            <div class="swiper-slide"><img src="https://via.placeholder.com/400" alt="Product Image 2"></div>-->
+<!--            <div class="swiper-slide"><img src="https://via.placeholder.com/400" alt="Product Image 3"></div>-->
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Navigation -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+
+    <div class="product-info">
+        <h2 th:text="${product.getName()}">Название товара</h2>
+        <p th:text="${'Описание товара: ' + product.getDescription()}"></p>
+        <p th:text="${'Цена: ' + product.getPrice() + ' ₴'}">Цена: $19.99</p>
+        <p>Продавец: <a href="#" class="seller-link" th:text="${product.getPerson().toString()}">Продавец</a></p>
+<!--        <label for="cart-form" class="custom-label">-->
+<!--            Добавить в корзину-->
+<!--            <input type="submit" value="Добавить в корзину" class="cart-form" id="cart-form">-->
+<!--        </label>-->
+        <form th:method="POST" th:action="@{/cart}" class="cart-form">
+            <input type="hidden" name="buyerId" th:value="${buyer.getId()}">
+            <input type="hidden" name="productId" th:value="${product.getId()}">
+            <label for="quantity" class="custom-label">
+                Количество:
+                <input type="number" id="quantity" name="count" min="1" value="1">
+            </label>
+            <label for="cart-form" class="custom-label">
+                Добавить в корзину
+                <input type="submit" value="Добавить в корзину" class="cart-form" id="cart-form">
+            </label>
+        </form>
+    </div>
+</div>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+    });
+</script>
+
+</body>
+</html>

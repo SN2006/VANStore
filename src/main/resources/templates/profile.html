@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="" th:href="@{/css/profile.css}">
+</head>
+<body>
+
+<div class="header">
+    <a href="/" class="logo">VANSTORE</a>
+    <div class="nav">
+        <a href="/">Главная страница</a>
+        <a href="/catalog/selectCategory">Каталог</a>
+        <a href="/contact_us">Написать нам</a>
+        <a href="/userProfile">Мой профиль</a>
+        <a href="/cart">Корзина</a>
+        <a th:if="${person.isAdmin()}" href="/admin">Панель администратора</a>
+        <a th:if="${person.isOwner()}" href="/owner">Панель владельца</a>
+    </div>
+</div>
+
+<div class="leftContainer">
+    <h2>Редактирование ФИО</h2>
+    <form class="login-form" th:method="PATCH" th:action="@{/people/{id}(id=${person.getId()})}" th:object="${person}">
+        <input type="text" th:field="*{firstName}" id="firstName" placeholder="Имя" required>
+        <div style="color: red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">firstName error</div>
+
+        <input type="text" th:field="*{surname}" id="surname" placeholder="Фамилия" required>
+        <div style="color: red" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">surname error</div>
+
+        <input type="text" th:field="*{middleName}" id="middleName" placeholder="Отчество" required>
+        <div style="color: red" th:if="${#fields.hasErrors('middleName')}" th:errors="*{middleName}">middleName error</div>
+
+        <input type="tel" th:field="*{phone}" id="phone" placeholder="+38 (___) ___-____" required>
+        <div style="color: red" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">phone error</div>
+
+        <input type="submit" value="Редактировать">
+    </form>
+    <form class="login-form" th:action="@{/logout}" th:method="POST">
+        <input type="submit" value="Выход">
+    </form>
+</div>
+
+<div class="order-list">
+    <div class="order-header">Мои заказы</div>
+    <div class="order" th:each="order : ${orders}">
+        <span class="order-number"><a href="#" th:text="${order.getId()}">#12345</a></span>
+        <span class="order-status" th:text="${order.getStatus()}">Processing</span>
+        <span class="order-total" th:text="${order.getTotalCount() + ' ₴'}">$49.98</span>
+        <span class="order-seller" th:text="${order.getSeller().toString()}">Seller Name</span>
+        <form th:method="DELETE" th:action="@{/cart/deleteOrder/{id}(id=${order.getId()})}" class="cancel-form">
+            <input type="submit" value="Cancel">
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

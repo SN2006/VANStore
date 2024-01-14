@@ -1,0 +1,86 @@
+.cart-container {
+    color: #333;
+    width: 80%;
+    margin-top: 100px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.product {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.product img {
+    width: 100%;
+    max-width: 100px;
+    border-radius: 8px;
+}
+
+.product-name {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.edit-form,
+.remove-form {
+    display: flex;
+    align-items: center;
+}
+
+.edit-form input,
+.remove-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.edit-form input[type="submit"],
+.remove-form input[type="submit"] {
+    padding: 10px;
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease;
+}
+
+.edit-form input[type="submit"]:hover,
+.remove-form input[type="submit"]:hover {
+    background: #c0392b;
+}
+
+.order-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.order-total {
+    font-size: 18px;
+    color: #3498db;
+}
+
+.order-form input[type="submit"] {
+    padding: 15px;
+    background: #2ecc71;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.order-form input[type="submit"]:hover {
+    background: #27ae60;
+}

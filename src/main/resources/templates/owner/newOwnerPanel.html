@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner panel</title>
+    <link rel="stylesheet" href="" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/newOwnerPanel.css}">
+</head>
+<body>
+<div class="header">
+    <a href="/" class="logo">VANSTORE</a>
+    <div class="nav">
+        <a href="/">Главная страница</a>
+        <a href="/catalog/selectCategory">Каталог</a>
+        <a href="/contact_us">Написать нам</a>
+        <a href="/userProfile">Мой профиль</a>
+        <a href="/cart">Корзина</a>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <div class="sidebar">
+        <a href="#set-admin">Назначение администраторов</a>
+        <a href="#set-user">Снятие с должности администраторов</a>
+        <a href="#add-brand">Добавление марок машин</a>
+        <a href="#add-model">Добавление моделей машин</a>
+        <a href="#brand-container">Марки машин</a>
+    </div>
+
+    <div class="content">
+        <div id="set-admin">
+            <h2>Назначение администраторов</h2>
+            <form th:method="PATCH" th:action="@{/people/setAdmin}" class="set-admin__form">
+                <label for="adminSelect">Выбор человека:</label>
+                <select th:object="${newAdmin}" th:field="*{id}" id="adminSelect" name="adminSelect">
+                    <option th:each="user : ${users}" th:value="${user.getId()}"
+                            th:text="${user.getFirstName() + ' ' + user.getSurname() + ' ' + user.getMiddleName()}"></option>
+                </select>
+
+                <input type="submit" value="Сделать администратором">
+            </form>
+        </div>
+
+        <div id="set-user">
+            <h2>Снятие с должности администраторов</h2>
+            <form th:method="PATCH" th:action="@{/people/setUser}" class="set-user__form">
+                <label for="userSelect">Выбор администратора:</label>
+                <select th:object="${newUser}" th:field="*{id}" id="userSelect" name="userSelect">
+                    <option th:each="admin : ${admins}" th:value="${admin.getId()}"
+                            th:text="${admin.getFirstName() + ' ' + admin.getSurname() + ' ' + admin.getMiddleName()}"></option>
+                </select>
+
+                <input type="submit" value="Снять с должности администратора">
+            </form>
+        </div>
+
+        <div id="add-brand">
+            <h2>Добавление марок машин</h2>
+            <form class="add-brand__form" th:method="POST" th:action="@{/carBrand}" th:object="${newBrand}">
+                <label for="brandName">Название марки:</label>
+                <input type="text" id="brandName" th:field="*{name}" required>
+                <input type="submit" value="Добавить марку">
+            </form>
+        </div>
+
+        <div id="add-model">
+            <h2>Добавление моделей машин</h2>
+            <form class="add-model__form" th:method="POST" th:action="@{/carModel}" th:object="${newModel}">
+                <label for="brandSelect">Марка машины:</label>
+                <select id="brandSelect" name="brandId">
+                    <option th:each="brand : ${brands}" th:value="${brand.getId()}" th:text="${brand.getName()}"></option>
+                </select>
+                <label for="modelName">Название модели:</label>
+                <input type="text" id="modelName" th:field="*{name}" required>
+                <input type="submit" value="Добавить модель">
+            </form>
+        </div>
+
+        <div id="brand-container">
+            <h2>Марки машин</h2>
+            <div class="brand" th:each="brand : ${brands}">
+                <h3 th:text="${'Марка: ' + brand.getName()}">Brand 1</h3>
+                <div class="brand__forms">
+                    <form th:method="PATCH" th:action="@{/carBrand/{id}(id=${brand.getId()})}" th:object="${editBrand}">
+                        <input type="text" placeholder="Новое имя марки" th:field="*{name}" required>
+                        <input type="submit" value="Редактировать марку">
+                    </form>
+                    <form th:method="DELETE" th:action="@{/carBrand/{id}(id=${brand.getId()})}">
+                        <input type="submit" value="Удалить марку">
+                    </form>
+                </div>
+
+                <div class="model-container">
+                    <h4 class="title" th:text="${'Модели марки ' + brand.getName()}"></h4>
+                    <div class="model" th:each="model : ${brand.getCarModels()}">
+                        <h4 th:text="${'Модель: ' + model.getName()}">Model 1</h4>
+                        <div class="model__forms">
+                            <form th:method="PATCH" th:action="@{/carModel/{id}(id=${model.getId()})}" th:object="${editModel}">
+                                <input th:field="*{name}" type="text" placeholder="Новое имя модели" required>
+                                <input type="submit" value="Редактировать модель">
+                            </form>
+                            <form th:method="DELETE" th:action="@{/carModel/{id}(id=${model.getId()})}">
+                                <input type="submit" value="Удалить модель">
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Add more models as needed -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

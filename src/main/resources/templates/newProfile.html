@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="" th:href="@{/css/newProfile.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/nav.css}">
+</head>
+<body>
+<div class="header">
+    <a href="/" class="logo">VANSTORE</a>
+    <div class="nav">
+        <a href="/">Главная страница</a>
+        <a href="/catalog/selectCategory">Каталог</a>
+        <a href="/contact_us">Написать нам</a>
+        <a href="/userProfile">Мой профиль</a>
+        <a href="/cart">Корзина</a>
+        <a th:if="${person.isAdmin()}" href="/admin">Панель администратора</a>
+        <a th:if="${person.isOwner()}" href="/owner">Панель владельца</a>
+    </div>
+</div>
+
+<div class="profile">
+    <div class="sidebar">
+        <a href="#my-data">Мои данные</a>
+        <a href="#my-orders">Мои заказы</a>
+    </div>
+
+    <div class="content">
+        <div id="my-data">
+            <h2>Мои данные</h2>
+            <form class="profile-form" th:method="PATCH" th:action="@{/people/{id}(id=${person.getId()})}" th:object="${person}">
+                <label for="first-name">Имя:</label>
+                <input type="text" id="first-name" name="first-name" th:field="*{firstName}" required>
+                <div style="color: red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">firstName error</div>
+
+                <label for="last-name">Фамилия:</label>
+                <input type="text" id="last-name" name="last-name" th:field="*{surname}" required>
+                <div style="color: red" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">surname error</div>
+
+                <label for="middle-name">Отчество:</label>
+                <input type="text" id="middle-name" name="middle-name" th:field="*{middleName}" required>
+                <div style="color: red" th:if="${#fields.hasErrors('middleName')}" th:errors="*{middleName}">middleName error</div>
+
+                <label for="phone">Номер телефона:</label>
+                <input type="text" id="phone" name="phone" th:field="*{phone}" required>
+                <div style="color: red" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">phone error</div>
+
+                <input type="submit" value="Сохранить изменения">
+            </form>
+            <form class="profile-form" th:action="@{/logout}" th:method="POST">
+                <input type="submit" value="Выход">
+            </form>
+        </div>
+
+        <div id="my-orders">
+            <h2>Мои заказы</h2>
+            <p th:if="${orders.isEmpty()}">У вас ещё не было заказов</p>
+            <div class="order-list">
+                <div class="order" th:each="order : ${orders}">
+                    <span class="order-number"><a th:href="@{/orders/{id}(id=${order.getId()})}" th:text="${'Заказ №' + order.getId()}">#12345</a></span> <br>
+                    <span class="order-status" th:text="${order.getStatus()}" th:style="${'color: ' + ((order.getStatus() == 'Заказ выполнен') ? 'green' : ((order.getStatus() == 'Заказ доставляется') ? 'blue' : 'red'))}">Processing</span> <br>
+                    <span class="order-total" th:text="${order.getTotalCount() + ' ₴'}">$49.98</span> <br>
+                    <span class="order-seller" th:text="${order.getSeller().toString()}">Seller Name</span> <br>
+                    <form th:method="DELETE" th:action="@{/cart/deleteOrder/{id}(id=${order.getId()})}" class="cancel-form">
+                        <input type="submit" value="Cancel">
+                    </form>
+                </div>
+                <!-- Add more orders as needed -->
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

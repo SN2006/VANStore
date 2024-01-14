@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin panel</title>
+    <link rel="stylesheet" href="" th:href="@{/css/newAdminPage.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/nav.css}">
+</head>
+<body>
+
+<div class="header">
+    <a href="/" class="logo">VANSTORE</a>
+    <div class="nav">
+        <a href="/">Главная страница</a>
+        <a href="/catalog/selectCategory">Каталог</a>
+        <a href="/contact_us">Написать нам</a>
+        <a href="/userProfile">Мой профиль</a>
+        <a href="/cart">Корзина</a>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <div class="sidebar">
+        <a href="#add-product">Добавление нового товара</a>
+        <a href="#product-list">Список моих товаров</a>
+        <a href="#orders">Заказы</a>
+    </div>
+
+    <div class="content">
+        <div id="add-product">
+            <h2>Добавление нового товара</h2>
+            <form class="admin-form" th:method="POST" th:action="@{/products}" th:object="${newProduct}" enctype="multipart/form-data">
+                <input type="hidden" th:value="${person.getId()}" name="personId">
+                <label for="productName">Название товара:</label>
+                <input th:field="*{name}" type="text" id="productName" required>
+                <p style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
+                <label for="modelSelect">Категория товара: </label>
+                <select id="modelSelect" name="modelId">
+                    <option th:each="model : ${models}" th:value="${model.getId()}"
+                            th:text="${model.getCarBrand().getName() + ': ' + model.getName()}"></option>
+                </select>
+
+                <label for="productDescription">Описание товара:</label>
+                <textarea th:field="*{description}" id="productDescription" rows="4" required></textarea>
+
+                <label for="productPrice">Стоимость продукта (грн):</label>
+                <input th:field="*{price}" type="number" id="productPrice" step="1" required>
+                <p style="color: red" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+
+                <label for="image" class="custom-file-upload">Выберите картинку товара</label>
+                <input type="file" id="image" name="file" accept="image/*" required>
+
+                <input type="submit" value="Добавить товар">
+            </form>
+        </div>
+
+        <div id="product-list">
+            <h2>Список моих товаров</h2>
+            <div class="product-list">
+                <p th:if="${products.isEmpty()}">Вы ещё не добавляли свои товары</p>
+                <div class="product" th:each="product:${products}">
+                    <img th:src="@{/images/{imgId}(imgId = ${product.getPreviewImageId()})}" alt="Product 1">
+                    <span class="product-number"><a th:href="@{/products/{productId}(productId=${product.getId()})}" th:text="${product.getName()}">Название</a></span> <br>
+                    <span class="product-price" th:text="${'Цена: ' + product.getPrice() + ' ₴'}">$49.99</span>
+                    <div class="product-actions">
+                        <form th:action="@{/admin/editProduct/{productId}(productId=${product.getId()})}" th:method="GET">
+                            <input type="submit" value="Редактировать">
+                        </form>
+                        <br>
+                        <form th:action="@{/products/{productId}(productId=${product.getId()})}" th:method="DELETE">
+                            <input type="submit" value="Удалить">
+                        </form>
+                    </div>
+                </div>
+
+
+                <!-- Добавьте другие товары по необходимости -->
+            </div>
+        </div>
+
+        <div id="orders">
+            <h2>Заказы</h2>
+            <div class="order-list">
+                <p th:if="${orders.isEmpty()}">У вас ещё не было заказов</p>
+                <div class="order" th:each="order : ${orders}">
+                    <span class="order-number"><a th:href="@{/orders/{id}(id=${order.getId()})}" th:text="${'Заказ №' + order.getId()}">#12345</a></span> <br>
+                    <span class="order-status" th:text="${order.getStatus()}" th:style="${'color: ' + ((order.getStatus() == 'Заказ выполнен') ? 'green' : ((order.getStatus() == 'Заказ доставляется') ? 'blue' : 'red'))}">Processing</span> <br>
+                    <span class="order-total" th:text="${order.getTotalCount() + ' ₴'}">$49.98</span> <br>
+                    <span class="order-buyer" th:text="${order.getBuyer().toString()}">Buyer Name</span> <br>
+                    <form th:method="DELETE" th:action="@{/cart/deleteOrder/{id}(id=${order.getId()})}" class="cancel-form">
+                        <input type="submit" value="Cancel">
+                    </form>
+                </div>
+
+                <!-- Добавьте другие заказы по необходимости -->
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

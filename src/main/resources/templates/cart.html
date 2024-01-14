@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link rel="stylesheet" href="" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/cart.css}">
+</head>
+<body>
+<div class="header">
+    <a href="/" class="logo">VANSTORE</a>
+    <div class="nav">
+        <a href="/">Главная страница</a>
+        <a href="/catalog/selectCategory">Каталог</a>
+        <a href="/contact_us">Написать нам</a>
+        <a href="/userProfile">Мой профиль</a>
+        <a href="/cart">Корзина</a>
+    </div>
+</div>
+
+<div class="cart-container">
+    <div class="product" th:each="product : ${products}">
+        <img th:src="@{/images/{id}(id=${product.getProduct().getPreviewImageId()})}" alt="Product Image">
+        <a th:href="@{/products/{id}(id=${product.getProduct().getId()})}" class="product-name" th:text="${product.getProduct().getName()}">Product Name</a>
+        <p th:text="${product.getProduct().getPrice() + ' ₴'}">$19.99</p>
+        <form th:method="PATCH" th:action="@{/cart/editCount/{id}(id=${product.getId()})}" class="edit-form">
+            <input type="number" name="count" th:value="${product.getCount()}" min="1">
+            <input type="submit" value="Update">
+        </form>
+        <form th:method="DELETE" th:action="@{/cart/{id}(id=${product.getId()})}" class="remove-form">
+            <input type="submit" value="Remove">
+        </form>
+    </div>
+
+    <div class="order-form">
+        <span th:text="${'Общая стоимость: ' + totalPrice + ' ₴'}" class="order-total">Общая стоимость: $49.98</span>
+        <form th:method="POST" th:action="@{/cart/createOrder}">
+            <input type="hidden" th:value="${buyerId}" name="buyerId">
+            <input type="submit" value="Заказать">
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
